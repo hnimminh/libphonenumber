@@ -211,7 +211,8 @@ extern "C" int luaopen_luaphonenumber(lua_State* L) {
     {NULL,              NULL}
   };
 
-  luaL_register(L, "phonenumber", phonenumber);
+  lua_newtable(L);
+  luaL_setfuncs(L, phonenumber, 0);
 
   return 1;
 }
