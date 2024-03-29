@@ -1,41 +1,70 @@
-# luaphonenumber
-Lua 5.1+ bindings for libphonenumber
+# libphonenumber
+Lua bindings C/C++ for google libphonenumber, It's an origin-fork of `singlecomm/luaphonenumber` with support Lua5.2+
 
-### Install
+## Prerequisites
 Ensure build dependencies are readily available on your system:
 * [Google libphonenumber](https://github.com/googlei18n/libphonenumber)
 * [ICU library](http://site.icu-project.org/)
 
-```sh
-luarocks install luaphonenumber
+```bash
+# https://build.alpinelinux.org/buildlogs/build-edge-armhf/community/lua-luaphonenumber/lua-luaphonenumber-1.0.1-r2.log
+apt-get install libicu-dev libphonenumber8 libphonenumber-dev
 ```
 
-or
+## Installation
+#### By luarocks
 
-```sh
-luarocks https://raw.githubusercontent.com/singlecomm/luaphonenumber/master/luaphonenumber-1.0-1.rockspec
+```bash
+luarocks install libphonenumber
 ```
-
-Typical install outout sample:
-```
-Using luaphonenumber-1.0-1.rockspec... switching to 'build' mode
-Cloning into 'luaphonenumber'...
-remote: Enumerating objects: 7, done.
-remote: Counting objects: 100% (7/7), done.
-remote: Compressing objects: 100% (5/5), done.
-remote: Total 7 (delta 0), reused 4 (delta 0), pack-reused 0
-Receiving objects: 100% (7/7), done.
-Checking connectivity... done.
+Typical install outout sample
+```shell
+luarocks install libphonenumber
+Installing https://luarocks.org/libphonenumber-1.0-2.rockspec
+Cloning into 'libphonenumber'...
+remote: Enumerating objects: 51, done.
+remote: Counting objects: 100% (24/24), done.
+remote: Compressing objects: 100% (16/16), done.
+remote: Total 51 (delta 10), reused 20 (delta 8), pack-reused 27
+Receiving objects: 100% (51/51), 14.89 KiB | 1.06 MiB/s, done.
+Resolving deltas: 100% (21/21), done.
 Warning: variable CFLAGS was not passed in build_variables
-g++ -std=c++11 -Wall -fPIC -c luaphonenumber.cpp
-g++ -shared -Wl,-soname,luaphonenumber.so.1 -o luaphonenumber.so.1.0 luaphonenumber.o -lphonenumber -lgeocoding
+g++  -std=c++11 -Wall -fPIC -I/usr/include/lua5.2 -c luaphonenumber.cpp
+g++   -I/usr/include/lua5.2 -shared -Wl,-soname,luaphonenumber.so.1 -o luaphonenumber.so.1.0 luaphonenumber.o -lphonenumber -lgeocoding
 ln -sf luaphonenumber.so.1.0 luaphonenumber.so
 ln -sf luaphonenumber.so.1.0 luaphonenumber.so.1
-cp luaphonenumber.so* /usr/local/lib/lua/5.1
-Updating manifest for /usr/local/lib/luarocks/rocks
-No existing manifest. Attempting to rebuild...
-luaphonenumber 1.0-1 is now built and installed in /usr/local (license: MIT)
+cp luaphonenumber.so* /usr/local/lib/lua/5.2
+libphonenumber 1.0-2 is now installed in /usr/local (license: MIT)
+
 ```
+
+
+#### From source
+
+```bash
+git clone https://github.com/hnimminh/libphonenumber.git
+cd libphonenumber && make && make install
+```
+
+```shell
+# git clone https://github.com/hnimminh/libphonenumber.git
+Cloning into 'libphonenumber'...
+remote: Enumerating objects: 51, done.
+remote: Counting objects: 100% (24/24), done.
+remote: Compressing objects: 100% (16/16), done.
+remote: Total 51 (delta 10), reused 20 (delta 8), pack-reused 27
+Receiving objects: 100% (51/51), 14.89 KiB | 3.72 MiB/s, done.
+Resolving deltas: 100% (21/21), done.
+
+# cd libphonenumber && make && make install
+g++  -std=c++11 -Wall -fPIC -I/usr/include/lua5.2 -c luaphonenumber.cpp
+g++   -I/usr/include/lua5.2 -shared -Wl,-soname,luaphonenumber.so.1 -o luaphonenumber.so.1.0 luaphonenumber.o -lphonenumber -lgeocoding
+ln -sf luaphonenumber.so.1.0 luaphonenumber.so
+ln -sf luaphonenumber.so.1.0 luaphonenumber.so.1
+cp luaphonenumber.so* /usr/local/lib/lua/5.2
+#https://github.com/TheLinx/lao/issues/2#issuecomment-56251801
+```
+
 
 ### Methods
 
@@ -44,29 +73,17 @@ luaphonenumber 1.0-1 is now built and installed in /usr/local (license: MIT)
 Parses the `input` against the phone numbering schema of the `country` jurisdiction. The results are subsequently localized for the `language` used in `localization_country` area.
 
 ```lua
-phonenumber = require 'luaphonenumber'
+phonenumber = require("luaphonenumber")
 
 local pn = phonenumber.parse( "+18045551234", "us", "en", "US" )
 
-print( "e164 format: " .. pn.E164 )
-print( "rfc3966 format: " .. pn.RFC3966 )
-print( "international format: " .. pn.INTERNATIONAL )
-print( "national format: " .. pn.NATIONAL )
-print( "country: " .. pn.country )
-print( "location: " .. pn.location )
-print( "line type: " .. pn.type )
-```
-
-Output:
-
-```
-e164 format: +18045551234
-rfc3966 format: tel:+1-804-555-1234
-international format: +1 804-555-1234
-national format: (804) 555-1234
-country: US
-location: Virginia
-line type: FIXED_LINE_OR_MOBILE
+print( "e164 format: " .. pn.E164 )                     -- e164 format: +18045551234
+print( "rfc3966 format: " .. pn.RFC3966 )               -- rfc3966 format: tel:+1-804-555-1234
+print( "international format: " .. pn.INTERNATIONAL )   -- international format: +1 804-555-1234
+print( "national format: " .. pn.NATIONAL )             -- national format: (804) 555-1234
+print( "country: " .. pn.country )                      -- country: US
+print( "location: " .. pn.location )                    -- location: Virginia
+print( "line type: " .. pn.type )                       -- line type: FIXED_LINE_OR_MOBILE
 ```
 
 ##### format( input, country, pattern )
@@ -78,22 +95,14 @@ Formats the `input` against the phone numbering schema of the `country` jurisdic
 * `RFC3966`
 
 ```lua
-phonenumber = require 'luaphonenumber'
+phonenumber = require("luaphonenumber")
 
-print( "e164 format: " .. phonenumber.format( "+18045551234", "us", "E164" ) )
-print( "rfc3966 format: " .. phonenumber.format( "+18045551234", "us", "RFC3966" ) )
-print( "international format: " .. phonenumber.format( "+18045551234", "us", "INTERNATIONAL" ) )
-print( "national format: " .. phonenumber.format( "+18045551234", "us", "NATIONAL" ) )
+print( "e164 format: " .. phonenumber.format( "+18045551234", "us", "E164" ) )                      -- e164 format: +18045551234
+print( "rfc3966 format: " .. phonenumber.format( "+18045551234", "us", "RFC3966" ) )                -- rfc3966 format: tel:+1-804-555-1234
+print( "international format: " .. phonenumber.format( "+18045551234", "us", "INTERNATIONAL" ) )    -- international format: +1 804-555-1234
+print( "national format: " .. phonenumber.format( "+18045551234", "us", "NATIONAL" ) )              -- national format: (804) 555-1234
 ```
 
-Output:
-
-```
-e164 format: +18045551234
-rfc3966 format: tel:+1-804-555-1234
-international format: +1 804-555-1234
-national format: (804) 555-1234
-```
 
 ##### get_country( input, bias_country )
 
@@ -109,20 +118,12 @@ local input2 = "8045551234"
 local input3 = "+447400555123"
 local input4 = "07400555123"
 
-print( "Country of " .. input1 .. ": " .. phonenumber.get_country( input1, "us" ) )
-print( "Country of " .. input2 .. ": " .. phonenumber.get_country( input2, "us" ) )
-print( "Country of " .. input3 .. ": " .. phonenumber.get_country( input3, "us" ) )
-print( "Country of " .. input4 .. ": " .. phonenumber.get_country( input4, "us" ) )
+print( "Country of " .. input1 .. ": " .. phonenumber.get_country( input1, "us" ) )     -- Country of +18045551234: US
+print( "Country of " .. input2 .. ": " .. phonenumber.get_country( input2, "us" ) )     -- Country of 8045551234: US
+print( "Country of " .. input3 .. ": " .. phonenumber.get_country( input3, "us" ) )     -- Country of +447400555123: GB
+print( "Country of " .. input4 .. ": " .. phonenumber.get_country( input4, "us" ) )     -- Country of 07400555123: ZZ
 ```
 
-Output:
-
-```
-Country of +18045551234: US
-Country of 8045551234: US
-Country of +447400555123: GB
-Country of 07400555123: ZZ
-```
 
 ##### get_location( input, country, language, localization_country )
 
@@ -136,16 +137,10 @@ local country1 = "us"
 local input2 = "+442085551234"
 local country2 = "gb"
 
-print( "Region of " .. input1 .. ": " .. phonenumber.get_location( input1, country1, "en", "US" ) )
-print( "Region of " .. input2 .. ": " .. phonenumber.get_location( input2, country2, "en", "US" ) )
+print( "Region of " .. input1 .. ": " .. phonenumber.get_location( input1, country1, "en", "US" ) )     -- Region of +18045551234: Virginia
+print( "Region of " .. input2 .. ": " .. phonenumber.get_location( input2, country2, "en", "US" ) )     -- Region of +442085551234: London
 ```
 
-Output:
-
-```
-Region of +18045551234: Virginia
-Region of +442085551234: London
-```
 
 ##### get_type( input, country )
 
@@ -173,15 +168,7 @@ local country2 = "gb"
 local input3 = "+40740555123"
 local country3 = "ro"
 
-print( "Type of " .. input1 .. ": " .. phonenumber.get_type( input1, country1 ) )
-print( "Type of " .. input2 .. ": " .. phonenumber.get_type( input2, country2 ) )
-print( "Type of " .. input3 .. ": " .. phonenumber.get_type( input3, country3 ) )
-```
-
-Output:
-
-```
-Type of +18045551234: FIXED_LINE_OR_MOBILE
-Type of +442085551234: FIXED_LINE
-Type of +40740555123: MOBILE
+print( "Type of " .. input1 .. ": " .. phonenumber.get_type( input1, country1 ) )       -- Type of +18045551234: FIXED_LINE_OR_MOBILE
+print( "Type of " .. input2 .. ": " .. phonenumber.get_type( input2, country2 ) )       -- Type of +442085551234: FIXED_LINE
+print( "Type of " .. input3 .. ": " .. phonenumber.get_type( input3, country3 ) )       -- Type of +40740555123: MOBILE
 ```
