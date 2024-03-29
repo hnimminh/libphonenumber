@@ -7,7 +7,7 @@ Ensure build dependencies are readily available on your system:
 * [ICU library](http://site.icu-project.org/)
 
 ```bash
-# https://build.alpinelinux.org/buildlogs/build-edge-armhf/community/lua-luaphonenumber/lua-luaphonenumber-1.0.1-r2.log
+## https://build.alpinelinux.org/buildlogs/build-edge-armhf/community/lua-luaphonenumber/lua-luaphonenumber-1.0.1-r2.log
 apt-get install libicu-dev libphonenumber8 libphonenumber-dev
 ```
 
@@ -19,7 +19,7 @@ luarocks install libphonenumber
 ```
 Typical install outout sample
 ```shell
-luarocks install libphonenumber
+#luarocks install libphonenumber
 Installing https://luarocks.org/libphonenumber-1.0-2.rockspec
 Cloning into 'libphonenumber'...
 remote: Enumerating objects: 51, done.
@@ -47,7 +47,7 @@ cd libphonenumber && make && make install
 ```
 
 ```shell
-# git clone https://github.com/hnimminh/libphonenumber.git
+#git clone https://github.com/hnimminh/libphonenumber.git
 Cloning into 'libphonenumber'...
 remote: Enumerating objects: 51, done.
 remote: Counting objects: 100% (24/24), done.
@@ -56,13 +56,13 @@ remote: Total 51 (delta 10), reused 20 (delta 8), pack-reused 27
 Receiving objects: 100% (51/51), 14.89 KiB | 3.72 MiB/s, done.
 Resolving deltas: 100% (21/21), done.
 
-# cd libphonenumber && make && make install
+#cd libphonenumber && make && make install
 g++  -std=c++11 -Wall -fPIC -I/usr/include/lua5.2 -c luaphonenumber.cpp
 g++   -I/usr/include/lua5.2 -shared -Wl,-soname,luaphonenumber.so.1 -o luaphonenumber.so.1.0 luaphonenumber.o -lphonenumber -lgeocoding
 ln -sf luaphonenumber.so.1.0 luaphonenumber.so
 ln -sf luaphonenumber.so.1.0 luaphonenumber.so.1
 cp luaphonenumber.so* /usr/local/lib/lua/5.2
-#https://github.com/TheLinx/lao/issues/2#issuecomment-56251801
+## https://github.com/TheLinx/lao/issues/2#issuecomment-56251801
 ```
 
 
